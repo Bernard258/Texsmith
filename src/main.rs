@@ -19,7 +19,7 @@ USAGE
     texsmith [--root PATH | -r PATH] <command>
 
 COMMANDS
-    new, n NAME [TITLE] [-t NAME]
+    new, n PAPER_NAME... [-t NAME]
         Create a report (default template: default)
 
     templates, t
@@ -48,14 +48,15 @@ OPTIONS
         Build all child report folders
 
 EXAMPLES
-    texsmith n my-paper -t ieee-conference
+    texsmith n My Paper -t ieee-conference
+    texsmith n \"My Paper\" -t ieee-conference
     texsmith b
     texsmith b my-paper ../other-paper
     texsmith b -a
 
 NOTES
     Run locally with: cargo texsmith <command>
-    Reports are created as NAME/main.tex in the current directory.
+    Reports are created as PAPER_NAME/main.tex in the current directory.
     List and build use the current directory; --root PATH overrides it.
     PDFs and logs are written to each report's build/ folder.
     Set TECTONIC to override the executable.";
@@ -93,7 +94,7 @@ fn run() -> Result<()> {
         .iter()
         .map(|arg| {
             arg.to_str()
-                .ok_or("command, report name, and title must be valid Unicode")
+                .ok_or("command, report name, and template name must be valid Unicode")
         })
         .collect::<std::result::Result<Vec<_>, _>>()?;
     match text_args.as_slice() {
@@ -103,7 +104,7 @@ fn run() -> Result<()> {
         }
         ["new" | "n", rest @ ..] => {
             let (name, title, template) = parse_new(rest)?;
-            create(&root, name, title, template)
+            create(&root, &name, &title, &template)
         }
         ["templates" | "t"] => {
             for template in TEMPLATES {
@@ -114,7 +115,7 @@ fn run() -> Result<()> {
         ["list" | "ls" | "l"] => {
             let reports = discover(&root)?;
             if reports.is_empty() {
-                println!("No reports yet. Run: texsmith new my-report \"My Report\"");
+                println!("No reports yet. Run: texsmith new My Report");
             }
             for path in reports {
                 println!("{}", path.file_name().unwrap().to_string_lossy());
@@ -126,8 +127,13 @@ fn run() -> Result<()> {
 }
 
 fn validate_name(name: &str) -> Result<()> {
-    if !names::report_name(name) {
-        return Err("report names must start with a letter or number and contain only letters, numbers, - or _; device names and src/target/templates are reserved".into());
+    if name.starts_with('-') {
+        return Err("report names cannot start with '-'".into());
+    }
+    if !names::portable_component(name)
+        || matches!(name.to_ascii_lowercase().as_str(), "src" | "target" | "templates")
+    {
+        return Err("report names must be a portable folder name (no slashes, control characters, trailing dots/spaces, or Windows device names); src/target/templates are reserved".into());
     }
     Ok(())
 }
@@ -151,7 +157,7 @@ fn escape_tex(text: &str) -> String {
         .collect()
 }
 
-fn parse_new<'a>(args: &[&'a str]) -> Result<(&'a str, &'a str, &'a str)> {
+fn parse_new(args: &[&str]) -> Result<(String, String, String)> {
     let mut positional = Vec::new();
     let mut template = None;
     let mut args = args.iter().copied();
@@ -167,11 +173,15 @@ fn parse_new<'a>(args: &[&'a str]) -> Result<(&'a str, &'a str, &'a str)> {
             positional.push(arg);
         }
     }
-    match positional.as_slice() {
-        [name] => Ok((name, name, template.unwrap_or("default"))),
-        [name, title] => Ok((name, title, template.unwrap_or("default"))),
-        _ => Err("usage: new NAME [TITLE] [--template NAME]".into()),
+    if positional.is_empty() {
+        return Err("usage: new PAPER_NAME... [--template NAME]".into());
     }
+    let paper_name = positional.join(" ");
+    Ok((
+        paper_name.clone(),
+        paper_name,
+        template.unwrap_or("default").to_string(),
+    ))
 }
 
 // Only generated embedded data is consulted at runtime: no template folder is needed.
@@ -357,7 +367,7 @@ mod tests {
         ] {
             assert!(validate_name(name).is_err(), "{name}");
         }
-        assert!(validate_name("2026-example_report").is_ok());
+        assert!(validate_name("2026 example_report").is_ok());
     }
     #[test]
     fn title_is_literal_latex_text() {

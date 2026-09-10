@@ -2,6 +2,8 @@
 % Select the legacy font encoding before IEEEtran initializes its Times fonts.
 \RequirePackage[T1]{fontenc}
 \documentclass[conference,letterpaper]{IEEEtran}
+% Keep this enabled if you add a \thanks funding footnote in the title.
+\IEEEoverridecommandlockouts
 \usepackage{cite}
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
@@ -10,17 +12,13 @@
 \usepackage[hidelinks]{hyperref}
 \graphicspath{{figures/}}
 % Leave margins, fonts, headings, and captions under IEEEtran control.
+% Avoid geometry/fullpage/setspace/titlesec and other layout overrides.
 \title{@@TITLE@@}
 \author{
-  \IEEEauthorblockN{First Author}
+  \IEEEauthorblockN{Author Name}
   \IEEEauthorblockA{Department, Institution\\
     City, Country\\
     author@example.com}
-  \and
-  \IEEEauthorblockN{Second Author}
-  \IEEEauthorblockA{Department, Institution\\
-    City, Country\\
-    second@example.com}
 }
 \begin{document}
 \maketitle

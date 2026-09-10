@@ -39,14 +39,14 @@ From this source directory:
 
 ```sh
 cargo texsmith templates
-cargo texsmith new my-paper "My Paper" --template ieee-conference
-cargo texsmith build my-paper
+cargo texsmith new My Paper --template ieee-conference
+cargo texsmith build "My Paper"
 cargo texsmith list
 cargo texsmith build --all
 ```
 
-Edit `my-paper/main.tex` and its supporting files. The PDF is
-`my-paper/build/main.pdf`. The included `example-report/` is ready to build.
+Edit `My Paper/main.tex` and its supporting files. The PDF is
+`My Paper/build/main.pdf`. The included `example-report/` is ready to build.
 `cargo texsmith` is a local alias for `cargo run --quiet --`.
 
 ## Shorthand commands
@@ -63,12 +63,13 @@ Edit `my-paper/main.tex` and its supporting files. The PDF is
 | `--root PATH` (before the command) | `-r PATH` |
 
 ```sh
-texsmith n my-paper "My Paper" -t ieee-conference
-texsmith b my-paper
+texsmith n My Paper -t ieee-conference
+texsmith n "My Paper" -t ieee-conference
+texsmith b "My Paper"
 texsmith b -a
 texsmith ls
 texsmith t
-texsmith -r ~/Documents n essay -t mla
+texsmith -r ~/Documents n MLA Essay -t mla
 ```
 
 Short and long forms can be mixed. Template names stay unchanged.
@@ -92,8 +93,8 @@ existing directory where you want to keep reports:
 
 ```sh
 texsmith templates
-texsmith new essay "My Essay" --template mla
-texsmith build essay
+texsmith new My Essay --template mla
+texsmith build "My Essay"
 ```
 
 ### Install from a release
@@ -125,7 +126,7 @@ Commands use the **current working directory**, with each report created as
 workspace marker is needed. Ancestor directories and legacy `.reports-root`
 files do not change where reports are created or discovered.
 
-Use `texsmith --root /path/to/directory new my-paper` to explicitly choose a
+Use `texsmith --root /path/to/directory new My Paper` to explicitly choose a
 different existing parent directory. The same override works for `list` and
 `build`. Paths are relative to where you launch Texsmith, not where its binary
 is stored. `texsmith --help` lists the commands.
@@ -183,12 +184,13 @@ with Tectonic installed. Python 3.10+ is needed only for developer checks; use
 | `apa` | APA 7 student paper, title page, References |
 
 ```sh
-texsmith new essay "My Essay" --template mla
-texsmith new study "My Study" --template apa
+texsmith new My Essay --template mla
+texsmith new "My Study" --template apa
 ```
 
 Omitting `--template` selects `default`. The option can appear before or after
-the report name and optional title. Titles are escaped as literal LaTeX text.
+the paper name words (quoted or unquoted). The resulting paper name is used for
+both the folder and the LaTeX title, and is escaped as literal LaTeX text.
 Each report gets independent editable copies of its selected template's files.
 Existing report folders are never overwritten.
 
@@ -237,9 +239,11 @@ in every `.tex` file when a report is created; `.tex` files must be UTF-8. Other
 files are written unchanged. Nested directories are preserved when they contain
 files. Empty directories are omitted, and `figures/` is always created.
 
-Template/report names start with an ASCII letter or number and may contain
-letters, numbers, hyphens, and underscores. `src`, `target`, and `templates` (case-insensitive) and Windows device names are
-reserved report names. Build-time scanning skips entries named `.git`, `build`,
+Template names start with an ASCII letter or number and may contain
+letters, numbers, hyphens, and underscores. Report names are portable folder
+names (Unicode and spaces are allowed), cannot start with `-`, and still
+reserve `src`, `target`, and `templates` (case-insensitive) plus Windows device
+names. Build-time scanning skips entries named `.git`, `build`,
 and `target`, rejects symbolic links and special files, and requires `main.tex`
 in every template folder. Top-level files such as catalog documentation are
 ignored. A `default` template is required.

@@ -69,11 +69,11 @@ fn relocated_binary_lists_and_extracts_every_template_without_source_files() {
     assert!(names.lines().any(|name| name == "apa"));
     assert!(names.lines().any(|name| name == "mla"));
     for name in names.lines() {
-        let report = format!("{name}-paper");
-        let output = w.run(&["new", &report, "A&B", "--template", name]);
+        let report = format!("{name} paper");
+        let output = w.run(&["new", &report, "--template", name]);
         assert!(output.status.success(), "{output:?}");
         let main = fs::read_to_string(w.0.join(&report).join("main.tex")).unwrap();
-        assert!(main.contains("A\\&B"));
+        assert!(main.contains(&report.replace('&', "\\&")));
         assert!(!main.contains("@@TITLE@@"));
         assert!(w.0.join(&report).join("figures").is_dir());
         if name == "ieee-conference" {
@@ -96,7 +96,7 @@ fn runtime_templates_cannot_override_embedded_defaults() {
     assert!(!w.run(&["new", "one"]).status.success());
     assert_eq!(fs::read(w.0.join("one/main.tex")).unwrap(), original);
     assert!(
-        w.run(&["new", "--template", "brief", "two", "Title"])
+        w.run(&["new", "--template", "brief", "two"])
             .status
             .success()
     );
@@ -161,17 +161,25 @@ fn shorthand_commands_and_options_match_long_forms() {
     for alias in ["h", "-h", "--help"] {
         assert_eq!(w.run(&[alias]).stdout, w.run(&["help"]).stdout);
     }
-    let output = w.run(&["n", "short", "Paper & Notes", "-t", "brief"]);
+    let output = w.run(&["n", "short", "-t", "brief"]);
+    assert!(output.status.success(), "{output:?}");
+    let output = w.run(&["n", "My", "Unquoted", "Paper", "-t", "default"]);
+    assert!(output.status.success(), "{output:?}");
+    let output = w.run(&["n", "My Quoted Paper", "-t", "default"]);
     assert!(output.status.success(), "{output:?}");
     assert!(
-        w.run(&["new", "long", "Paper & Notes", "--template", "brief"])
+        w.run(&["new", "long", "--template", "brief"])
             .status
             .success()
     );
-    assert_eq!(
-        fs::read(w.0.join("short/main.tex")).unwrap(),
-        fs::read(w.0.join("long/main.tex")).unwrap()
-    );
+    let short = fs::read_to_string(w.0.join("short/main.tex")).unwrap();
+    let long = fs::read_to_string(w.0.join("long/main.tex")).unwrap();
+    assert!(short.contains("\\title{short}"));
+    assert!(long.contains("\\title{long}"));
+    let unquoted = fs::read_to_string(w.0.join("My Unquoted Paper/main.tex")).unwrap();
+    assert!(unquoted.contains("\\title{My Unquoted Paper}"));
+    let quoted = fs::read_to_string(w.0.join("My Quoted Paper/main.tex")).unwrap();
+    assert!(quoted.contains("\\title{My Quoted Paper}"));
     for alias in ["ls", "l"] {
         assert_eq!(w.run(&[alias]).stdout, w.run(&["list"]).stdout);
     }

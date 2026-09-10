@@ -22,6 +22,7 @@ pub fn portable_component(name: &str) -> bool {
     })
 }
 
+#[allow(dead_code)]
 pub fn report_name(name: &str) -> bool {
     portable_component(name)
         && name.as_bytes()[0].is_ascii_alphanumeric()
