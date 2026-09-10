@@ -33,7 +33,7 @@ jobs:
             binary: texsmith.exe
           - target: x86_64-apple-darwin
             platform: macos-x86_64
-            runner: macos-13
+            runner: macos-15-intel
             binary: texsmith
           - target: aarch64-apple-darwin
             platform: macos-aarch64
