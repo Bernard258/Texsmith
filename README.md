@@ -62,7 +62,9 @@ texsmith -r ~/Documents n essay -t mla
 
 Short and long forms can be mixed. Template names stay unchanged.
 
-## One executable
+## Installation
+
+### Install from source
 
 ```sh
 cargo build --release
