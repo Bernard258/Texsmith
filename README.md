@@ -7,6 +7,17 @@ Templates are embedded directly into the executable, so creating a report does
 not require a separate template directory. Each report remains an ordinary,
 editable folder containing its LaTeX source and supporting files.
 
+## Quick install
+
+On Linux or macOS, install the latest release with:
+
+```sh
+wget -qO- https://raw.githubusercontent.com/Bernard258/Texsmith/main/scripts/install.sh | sh
+```
+
+See [Installation](#installation) for source builds, version selection, and
+uninstall instructions.
+
 ## Features
 
 - Create reports from bundled templates with one command
