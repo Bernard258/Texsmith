@@ -1,0 +1,30 @@
+% Use the paper size and class options required by your venue.
+% Select the legacy font encoding before IEEEtran initializes its Times fonts.
+\RequirePackage[T1]{fontenc}
+\documentclass[journal,letterpaper]{IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\interdisplaylinepenalty=2500
+\usepackage[hidelinks]{hyperref}
+\graphicspath{{figures/}}
+% Leave margins, fonts, headings, and captions under IEEEtran control.
+\title{@@TITLE@@}
+\author{First Author and Second Author%
+  \thanks{First Author and Second Author are with Department, Institution,
+  City, Country (e-mail: author@example.com).}}
+\begin{document}
+\maketitle
+\begin{abstract}
+Summarize the problem, method, main results, and significance. Replace all
+instructional text and illustrative values before sharing this paper.
+\end{abstract}
+\begin{IEEEkeywords}
+First keyword, second keyword, third keyword
+\end{IEEEkeywords}
+\input{sections/body}
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+\end{document}

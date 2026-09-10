@@ -1,0 +1,31 @@
+% Local proceedings-layout draft. See README.md before submission.
+\documentclass[sigconf,nonacm]{acmart}
+\usepackage{amsmath}
+\graphicspath{{figures/}}
+\title{@@TITLE@@}
+\author{First Author}
+\affiliation{%
+  \institution{Institution}
+  \city{City}
+  \country{Country}}
+\email{author@example.com}
+\author{Second Author}
+\affiliation{%
+  \institution{Institution}
+  \city{City}
+  \country{Country}}
+\email{second@example.com}
+\renewcommand{\shortauthors}{First Author and Second Author}
+\begin{document}
+\begin{abstract}
+Summarize the problem, method, main results, and significance. Replace all
+instructional text and illustrative values before sharing this paper.
+\end{abstract}
+% Add the actual CCSXML and \ccsdesc entries supplied by the ACM CCS tool.
+\keywords{first keyword, second keyword, third keyword}
+\maketitle
+\input{sections/body}
+
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{references}
+\end{document}

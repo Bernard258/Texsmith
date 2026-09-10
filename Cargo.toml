@@ -1,0 +1,8 @@
+[package]
+name = "texsmith"
+version = "0.1.0"
+edition = "2024"
+publish = false
+description = "A standalone Rust CLI for creating and compiling LaTeX reports from embedded templates."
+
+[dependencies]
