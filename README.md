@@ -83,6 +83,30 @@ texsmith new essay "My Essay" --template mla
 texsmith build essay
 ```
 
+### Install from a release
+
+On Linux or macOS, install the latest release with `wget`:
+
+```sh
+wget -qO- https://raw.githubusercontent.com/Bernard258/Texsmith/main/scripts/install.sh | sh
+```
+
+The installer puts `texsmith` in `~/.local/bin`. To install a specific release,
+pass its tag:
+
+```sh
+wget -qO- https://raw.githubusercontent.com/Bernard258/Texsmith/main/scripts/install.sh | sh -s -- v0.1.0
+```
+
+Set `TEXSMITH_INSTALL_DIR` to use a different directory. To remove the
+installed binary, run:
+
+```sh
+wget -qO- https://raw.githubusercontent.com/Bernard258/Texsmith/main/scripts/uninstall.sh | sh
+```
+
+The uninstall script also respects `TEXSMITH_INSTALL_DIR`.
+
 Commands use the **current working directory**, with each report created as
 `./NAME/main.tex` and supporting files inside `./NAME/`. No initialization or
 workspace marker is needed. Ancestor directories and legacy `.reports-root`
